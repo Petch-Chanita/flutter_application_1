@@ -10,6 +10,7 @@ import 'models/users.dart';
 import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
+  // final String value_id;
   LoginPage({Key key}) : super(key: key);
   static String tag = 'login-page';
   @override
@@ -21,17 +22,21 @@ class _LoginPageState extends State<LoginPage> {
 
   Future save() async {
     var value;
+    var user_id;
     var res = await http.post("http://202.28.34.197:9000/authen/login",
         headers: <String, String>{
-          'Context-Type': 'application/json;charSet=UTF-8'
+          'Content-Type': 'application/json;charSet=UTF-8'
         },
-        body: <String, String>{
-          'username': user.username,
-          'password': user.password
-        });
+        body: jsonEncode({
+      'username': user.username,
+      'password': user.password
+        }));
+
     print(user.username);
     print(user.password);
     value = jsonDecode(res.body);
+    user_id = value["_id"];
+    print(user_id);
     print(value);
     if(value["status"] != 'error'){
       Navigator.push(
@@ -42,6 +47,7 @@ class _LoginPageState extends State<LoginPage> {
   User user = User('','','','');
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Stack(
       children: [
         ShaderMask(
@@ -79,103 +85,132 @@ class _LoginPageState extends State<LoginPage> {
                 child: Form(
                   key: _formKey,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: TextFormField(
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          controller: TextEditingController(text: user.username),
-                          onChanged: (value) {
-                            user.username = value;
-                          },
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Username is required';
-                            } else {
-                              // return 'Enter valid username';
-                              return null;
-                            }
-                          },
-                          decoration: InputDecoration(
-                              icon: Icon(
-                                FontAwesomeIcons.userAlt,
-                                color: Colors.white,
-                              ),
-                              hintText: 'Enter Username',
-                              hintStyle: TextStyle(
-                                color: Colors.white54,
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                  borderSide: BorderSide(color: Colors.white)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                  borderSide: BorderSide(color: Colors.white)),
-                              errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                  borderSide: BorderSide(color: Colors.red)),
-                              focusedErrorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                  borderSide: BorderSide(color: Colors.red))),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: TextFormField(
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          controller: TextEditingController(text: user.password),
-                          onChanged: (value) {
-                            user.password = value;
-                          },
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Password is required';
-                            }
-                            return null;
-                          },
-                          obscureText: true,
-                          decoration: InputDecoration(
-                              icon: Icon(
-                                Icons.vpn_key,
-                                color: Colors.white,
-                              ),
-                              hintText: 'Enter Password',
-                              hintStyle: TextStyle(
-                                color: Colors.white54,
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                  borderSide: BorderSide(color: Colors.white)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                  borderSide: BorderSide(color: Colors.white)),
-                              errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                  borderSide: BorderSide(color: Colors.red)),
-                              focusedErrorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                  borderSide: BorderSide(color: Colors.red)),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(55, 16, 16, 0),
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
                         child: Container(
-                          height: 50,
-                          width: 400,
+                          height: size.height * 0.08,
+                          width: size.width * 0.9,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[500].withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Center(
+                            child: TextFormField(
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              controller: TextEditingController(text: user.username),
+                              onChanged: (value) {
+                                user.username = value;
+                              },
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Username is required';
+                                } else {
+                                  // return 'Enter valid username';
+                                  return null;
+                                }
+                              },
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  prefixIcon: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                    child: Icon(
+                                      FontAwesomeIcons.userAlt,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  hintText: 'Enter Username',
+                                  hintStyle: TextStyle(
+                                    color: Colors.white54,
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: BorderSide(color: Colors.white)),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: BorderSide(color: Colors.white)),
+                                  errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: BorderSide(color: Colors.red)),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: BorderSide(color: Colors.red))
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        child: Container(
+                          height: size.height * 0.08,
+                          width: size.width * 0.9,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[500].withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Center(
+                            child: TextFormField(
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              controller: TextEditingController(text: user.password),
+                              onChanged: (value) {
+                                user.password = value;
+                              },
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Password is required';
+                                }
+                                return null;
+                              },
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                prefixIcon: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                  child: Icon(
+                                    Icons.vpn_key,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                  hintText: 'Enter Password',
+                                  hintStyle: TextStyle(
+                                    color: Colors.white54,
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: BorderSide(color: Colors.white)),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: BorderSide(color: Colors.white)),
+                                  errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: BorderSide(color: Colors.red)),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: BorderSide(color: Colors.red)),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16.0),
+                        child: Container(
+                          height: 55,
+                          width: 340,
                           child: FlatButton(
                               color: Colors.deepPurple,
                               shape: RoundedRectangleBorder(

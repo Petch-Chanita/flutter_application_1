@@ -8,7 +8,10 @@ class MyTheme {
   static Color kAccentColor = Color(0xffFCAAAB);
   static Color kAccentColorVariant = Color(0xffF7A3A2);
   static Color kUnreadChatBG = Color(0xffEE1D1D);
+  static Color drawerBackgroundColor = Color(0xFF272D34);
+  static Color selectedColor = Color(0xFF3D434B);
 
+  // static final TextStyle kAppTitle = GoogleFonts.acme(fontSize: 36);
   static final TextStyle kAppTitle = GoogleFonts.grandHotel(fontSize: 36);
 
   static final TextStyle heading2 = TextStyle(
@@ -40,4 +43,6 @@ class MyTheme {
     fontWeight: FontWeight.bold,
     letterSpacing: 1,
   );
+
+
 }

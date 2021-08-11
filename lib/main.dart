@@ -19,8 +19,8 @@ class MyApp extends StatelessWidget {
       title: 'Approom',
       // debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: MyTheme.kPrimaryColor,
-        accentColor: MyTheme.kAccentColor,
+        primaryColor: MyTheme.drawerBackgroundColor,
+        accentColor: MyTheme.selectedColor,
         textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => LoginPage(),
         'CreateNewAccount': (context) => CreateNewAccount(),
         '/HomePage': (context) => HomePage(),
+        '/Login': (context) => LoginPage(),
       },
     );
   }
