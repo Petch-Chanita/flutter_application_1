@@ -2,10 +2,12 @@ import 'dart:ui';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/login_page.dart';
+
+import 'package:flutter_application_1/models/users.dart';
+import 'package:flutter_application_1/page/login_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'models/users.dart';
+
 import 'package:http/http.dart' as http;
 // import 'package:flutter/services.dart' show rootBundle;
 // import 'package:path_provider/path_provider.dart';

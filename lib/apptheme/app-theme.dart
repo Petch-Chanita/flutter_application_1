@@ -44,5 +44,9 @@ class MyTheme {
     letterSpacing: 1,
   );
 
+  static TextStyle listTileDefaultTextStyle = TextStyle(color: Colors.white70,fontSize: 15);
+  static TextStyle listTileSelectedTextStyle = TextStyle(color: Colors.white,fontSize: 15);
 
+  static Color selectedColorDrawer = Color(0xFF4AC8EA);
+  static Color draweBackgroundColorDrawer = Color(0xFF272D34);
 }

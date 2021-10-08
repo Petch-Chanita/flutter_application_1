@@ -1,12 +1,15 @@
 import 'dart:convert';
 
-import 'package:flutter_application_1/create-new-account.dart';
-import 'package:flutter_application_1/home_page.dart';
+
+import 'package:flutter_application_1/models/users.dart';
+import 'package:flutter_application_1/page/create-new-account.dart';
+import 'package:flutter_application_1/page/home_page.dart';
+import 'package:flutter_application_1/page/slidepage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'models/users.dart';
+
 import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
@@ -39,8 +42,14 @@ class _LoginPageState extends State<LoginPage> {
     print(user_id);
     print(value);
     if(value["status"] != 'error'){
-      Navigator.push(
-          context, new MaterialPageRoute(builder: (context) => HomePage()));
+     Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => SlidePage(),
+            ),
+            (route) => false);
+      // Navigator.push(
+      //     context, new MaterialPageRoute(builder: (context) => HomePage()));
     }
   }
 

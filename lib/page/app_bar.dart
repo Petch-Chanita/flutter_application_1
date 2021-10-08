@@ -5,7 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 Widget appBar() {
   return AppBar(
     elevation: 0.0,
-    backgroundColor: MyTheme.drawerBackgroundColor,
+    // backgroundColor: MyTheme.drawerBackgroundColor,
+    backgroundColor: MyTheme.draweBackgroundColorDrawer,
     title: Center(
         child: Text(
             'Home',

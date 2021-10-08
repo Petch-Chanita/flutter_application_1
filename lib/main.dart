@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/apptheme/app-theme.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'apptheme/app-theme.dart';
-import 'create-new-account.dart';
-import 'login_page.dart';
-import 'home_page.dart';
+
+import 'page/create-new-account.dart';
+import 'page/login_page.dart';
+import 'page/home_page.dart';
 
 void main() => runApp(MyApp());
 
