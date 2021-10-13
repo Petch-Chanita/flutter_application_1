@@ -1,52 +1,35 @@
-// import 'package:flutter/foundation.dart';
-// import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/apptheme/app-theme.dart';
 import 'package:flutter_application_1/models/dataRoom.dart';
 import 'package:flutter_application_1/models/dataUser.dart';
-// import 'package:google_fonts/google_fonts.dart';
-
-import 'package:flutter_application_1/page/app_bar.dart';
-import 'package:flutter_application_1/page/drawer.dart';
-import 'package:flutter_application_1/page/searchpage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-class HomePage extends StatefulWidget {
-  HomePage({Key key}) : super(key: key);
+class Not_empty extends StatefulWidget {
+  Not_empty({Key key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _Not_emptyState createState() => _Not_emptyState();
 }
 
-class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
-  // TabController tabController;
-
-  @override
-  // void @override
-  void initState() {
-    print('kkkkk');
-    // tabController = TabController(length: 3, vsync: this);
-    super.initState();
-  }
-
+class _Not_emptyState extends State<Not_empty> {
   String mineID;
   String token;
   DataUser dataUser;
   List<DataRoom> dataRoom;
 
-  Future<bool> loadRoom() async {
+  Future<bool> loadnot_empty() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     mineID = preferences.getString("mineID");
     token = preferences.getString("token");
 
-    String apiUrl = 'http://202.28.34.197:9000/rooms/select';
+    String apiUrl = 'http://202.28.34.197:9000/rooms/search/status/กำลังถูกใช้';
 
     final res = await http.get(Uri.parse(apiUrl));
     print('statuscode${res.statusCode}');
     if (res.statusCode == 200) {
+      print('Empty${res.statusCode}');
       dataRoom = dataRoomFromJson(res.body);
       print('data id${dataRoom[0].id}');
     } else {
@@ -55,6 +38,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return true;
   }
 
+  @override
   Widget build(BuildContext context) {
     return Center(
       child: Scaffold(
@@ -63,28 +47,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             elevation: 0.0,
             backgroundColor: MyTheme.draweBackgroundColorDrawer,
             title: Text(
-              'Home',
+              'ห้องถูกใช้งาน',
               style: GoogleFonts.acme(
                 fontSize: 25.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            actions: <Widget>[
-              IconButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => SearchPage()));
-                  },
-                  icon: Icon(Icons.search)),
-            ],
           ),
-          drawer: drawer(),
-          // drawer: CollapsingNavigationDrawer(),
-          // backgroundColor: MyTheme.selectedColor,
-          // drawer: CollapsingNavigationDrawer(),
           backgroundColor: MyTheme.draweBackgroundColorDrawer,
           body: FutureBuilder(
-              future: loadRoom(),
+              future: loadnot_empty(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   print('snashot${snapshot.data}');

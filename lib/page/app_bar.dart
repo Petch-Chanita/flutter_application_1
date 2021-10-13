@@ -4,23 +4,19 @@ import 'package:google_fonts/google_fonts.dart';
 
 Widget appBar() {
   return AppBar(
+    centerTitle: true,
     elevation: 0.0,
     // backgroundColor: MyTheme.drawerBackgroundColor,
     backgroundColor: MyTheme.draweBackgroundColorDrawer,
-    title: Center(
-        child: Text(
-            'Home',
-          style: GoogleFonts.acme(
-            fontSize: 25.0,
-            fontWeight: FontWeight.bold,
-          ),
-        )
+    title: Text(
+      'Home',
+      style: GoogleFonts.acme(
+        fontSize: 25.0,
+        fontWeight: FontWeight.bold,
+      ),
     ),
     actions: <Widget>[
-      IconButton(
-        onPressed: () =>{},
-        icon: Icon(Icons.search)
-        )
+      IconButton(onPressed: () => {}, icon: Icon(Icons.search))
     ],
   );
 }

@@ -1,16 +1,16 @@
 import 'dart:convert';
 
-
 import 'package:flutter_application_1/models/users.dart';
 import 'package:flutter_application_1/page/create-new-account.dart';
+import 'package:flutter_application_1/page/drawer.dart';
 import 'package:flutter_application_1/page/home_page.dart';
 import 'package:flutter_application_1/page/slidepage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   // final String value_id;
@@ -23,6 +23,25 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
+  @override
+  void initState() {
+    super.initState();
+    check_token();
+  }
+
+  void check_token() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var check_mineID = preferences.get("mineID");
+    if (check_mineID != null) {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => HomePage(),
+          ),
+          (route) => false);
+    }
+  }
+
   Future save() async {
     var value;
     var user_id;
@@ -30,30 +49,34 @@ class _LoginPageState extends State<LoginPage> {
         headers: <String, String>{
           'Content-Type': 'application/json;charSet=UTF-8'
         },
-        body: jsonEncode({
-      'username': user.username,
-      'password': user.password
-        }));
+        body:
+            jsonEncode({'username': user.username, 'password': user.password}));
 
     print(user.username);
     print(user.password);
     value = jsonDecode(res.body);
     user_id = value["_id"];
-    print(user_id);
+
     print(value);
-    if(value["status"] != 'error'){
-     Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) => SlidePage(),
-            ),
-            (route) => false);
+    if (res.statusCode == 200) {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.setString('mineID', value["_id"]);
+      preferences.setString('token', value["data"]);
+
+      // Navigator.pushAndRemoveUntil(
+      //     context,
+      //     MaterialPageRoute(
+      //       builder: (BuildContext context) => HomePage(),
+      //     ),
+      //     (route) => false);
+
       // Navigator.push(
       //     context, new MaterialPageRoute(builder: (context) => HomePage()));
+
     }
   }
 
-  User user = User('','','','');
+  User user = User('', '', '', '');
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -72,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                     image: AssetImage('assets/images/backG.jpg'),
                     fit: BoxFit.cover,
                     colorFilter:
-                    ColorFilter.mode(Colors.black54, BlendMode.darken))),
+                        ColorFilter.mode(Colors.black54, BlendMode.darken))),
           ),
         ),
         Scaffold(
@@ -80,15 +103,15 @@ class _LoginPageState extends State<LoginPage> {
           body: Column(
             children: [
               Flexible(
-                  child: Center(
-                    child: Text(
-                      'LOGIN',
-                      style: GoogleFonts.acme(
+                child: Center(
+                  child: Text(
+                    'LOGIN',
+                    style: GoogleFonts.acme(
                         fontWeight: FontWeight.bold,
                         fontSize: 50,
                         color: Colors.white),
-                      ),
                   ),
+                ),
               ),
               Container(
                 child: Form(
@@ -97,126 +120,100 @@ class _LoginPageState extends State<LoginPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        child: Container(
-                          height: size.height * 0.08,
-                          width: size.width * 0.9,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[500].withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(16),
+                        padding: const EdgeInsets.all(15.0),
+                        child: TextFormField(
+                          cursorColor: Colors.white,
+                          validator: (value) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                value.trim() == "") {
+                              return 'Username is required';
+                            } else {
+                              return null;
+                            }
+                          },
+                          controller:
+                              TextEditingController(text: user.username),
+                          onChanged: (value) {
+                            user.username = value;
+                          },
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
                           ),
-                          child: Center(
-                            child: TextFormField(
-                              style: TextStyle(
+                          decoration: InputDecoration(
+                              fillColor: Colors.grey[500].withOpacity(0.5),
+                              filled: true,
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                  borderRadius: BorderRadius.circular(16)),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16.0)),
+                              prefixIcon: Icon(
+                                Icons.perm_identity,
                                 color: Colors.white,
-                                fontSize: 20.0,
+                              ),
+                              hintText: 'Enter Username',
+                              hintStyle: TextStyle(
+                                color: Colors.white54,
+                                fontSize: 18.0,
                                 fontWeight: FontWeight.bold,
                               ),
-                              controller: TextEditingController(text: user.username),
-                              onChanged: (value) {
-                                user.username = value;
-                              },
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Username is required';
-                                } else {
-                                  // return 'Enter valid username';
-                                  return null;
-                                }
-                              },
-                              decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  prefixIcon: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                                    child: Icon(
-                                      FontAwesomeIcons.userAlt,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  hintText: 'Enter Username',
-                                  hintStyle: TextStyle(
-                                    color: Colors.white54,
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                      borderSide: BorderSide(color: Colors.white)),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                      borderSide: BorderSide(color: Colors.white)),
-                                  errorBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                      borderSide: BorderSide(color: Colors.red)),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                      borderSide: BorderSide(color: Colors.red))
-                              ),
-                            ),
-                          ),
+                              contentPadding: new EdgeInsets.symmetric(
+                                  vertical: 15.0, horizontal: 10.0),
+                              labelStyle: TextStyle(color: Colors.white)),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        child: Container(
-                          height: size.height * 0.08,
-                          width: size.width * 0.9,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[500].withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(16),
+                        padding: const EdgeInsets.all(15.0),
+                        child: TextFormField(
+                          cursorColor: Colors.white,
+                          validator: (value) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                value.trim() == "") {
+                              return 'Password is required';
+                            } else {
+                              return null;
+                            }
+                          },
+                          obscureText: true,
+                          controller:
+                              TextEditingController(text: user.password),
+                          onChanged: (value) {
+                            user.password = value;
+                          },
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
                           ),
-                          child: Center(
-                            child: TextFormField(
-                              style: TextStyle(
+                          decoration: InputDecoration(
+                              fillColor: Colors.grey[500].withOpacity(0.5),
+                              filled: true,
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                  borderRadius: BorderRadius.circular(16)),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16.0)),
+                              prefixIcon: Icon(
+                                Icons.vpn_key_rounded,
                                 color: Colors.white,
-                                fontSize: 20.0,
+                              ),
+                              hintText: 'Enter Password',
+                              hintStyle: TextStyle(
+                                color: Colors.white54,
+                                fontSize: 18.0,
                                 fontWeight: FontWeight.bold,
                               ),
-                              controller: TextEditingController(text: user.password),
-                              onChanged: (value) {
-                                user.password = value;
-                              },
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Password is required';
-                                }
-                                return null;
-                              },
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                prefixIcon: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                                  child: Icon(
-                                    Icons.vpn_key,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                  hintText: 'Enter Password',
-                                  hintStyle: TextStyle(
-                                    color: Colors.white54,
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                      borderSide: BorderSide(color: Colors.white)),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                      borderSide: BorderSide(color: Colors.white)),
-                                  errorBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                      borderSide: BorderSide(color: Colors.red)),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                      borderSide: BorderSide(color: Colors.red)),
-                              ),
-                            ),
-                          ),
+                              contentPadding: new EdgeInsets.symmetric(
+                                  vertical: 15.0, horizontal: 10.0),
+                              labelStyle: TextStyle(color: Colors.white)),
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 16.0),
+                        padding: EdgeInsets.symmetric(vertical: 20.0),
                         child: Container(
                           height: 55,
                           width: 340,
@@ -226,15 +223,21 @@ class _LoginPageState extends State<LoginPage> {
                                   borderRadius: BorderRadius.circular(16.0)),
                               onPressed: () {
                                 if (_formKey.currentState.validate()) {
-                                  print("ok");
-                                  save();
+                                  print("success ok");
                                 } else {
-                                  print("not ok");
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) =>
+                                          CustomDialogNotificationPost(
+                                              text: "เกิดข้อผิดพลาด"));
                                 }
                               },
                               child: Text(
                                 "Login",
-                                style: TextStyle(color: Colors.white, fontSize: 20,fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold),
                               )),
                         ),
                       ),
@@ -280,6 +283,89 @@ class _LoginPageState extends State<LoginPage> {
           ),
         )
       ],
+    );
+  }
+}
+
+class CustomDialogNotificationPost extends StatelessWidget {
+  final String text;
+
+  CustomDialogNotificationPost({
+    this.text,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      child: dialogContent(context),
+    );
+  }
+
+  dialogContent(BuildContext context) {
+    return SingleChildScrollView(
+      child: Stack(
+        children: [
+          Container(
+            padding: EdgeInsets.only(top: 100, bottom: 26, left: 16, right: 16),
+            margin: EdgeInsets.only(top: 40),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(17),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 10.0,
+                    offset: Offset(0.0, 10.0),
+                  )
+                ]),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  text,
+                  style: TextStyle(color: Colors.grey.shade800, fontSize: 16.0),
+                ),
+                Text(
+                  "กรุณาตรวจสอบความถูกต้องอีกครั้ง :)",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 16.0,
+                  ),
+                ),
+                SizedBox(
+                  height: 24.0,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('OK'))
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            top: 0,
+            left: 16,
+            right: 16,
+            child: CircleAvatar(
+              backgroundColor: Colors.white,
+              radius: 50,
+              backgroundImage: NetworkImage(
+                'https://png.pngtree.com/png-vector/20190228/ourlarge/pngtree-wrong-false-icon-design-template-vector-isolated-png-image_711430.jpg',
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

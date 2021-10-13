@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         // fontFamily: 'Nunito',
       ),
-      // home: HomePage(),
+      // home: LoginPage(),
       // initialRoute: '/',
       routes: {
         '/': (context) => LoginPage(),
