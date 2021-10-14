@@ -58,28 +58,34 @@ class _LoginPageState extends State<LoginPage> {
     user_id = value["_id"];
 
     print(value);
-    if (res.statusCode == 200) {
+    if (value["status"] != 'error') {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       preferences.setString('mineID', value["_id"]);
       preferences.setString('token', value["data"]);
 
-      // Navigator.pushAndRemoveUntil(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (BuildContext context) => HomePage(),
-      //     ),
-      //     (route) => false);
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => HomePage(),
+          ),
+          (route) => false);
 
       // Navigator.push(
       //     context, new MaterialPageRoute(builder: (context) => HomePage()));
 
+    } else {
+      print('hhhhhhhhhhh');
+      showDialog(
+          context: context,
+          builder: (context) =>
+              CustomDialogNotificationPost(text: "เกิดข้อผิดพลาด"));
     }
   }
 
   User user = User('', '', '', '');
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    // Size size = MediaQuery.of(context).size;
     return Stack(
       children: [
         ShaderMask(
@@ -151,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(16.0)),
                               prefixIcon: Icon(
-                                Icons.perm_identity,
+                                FontAwesomeIcons.userAlt,
                                 color: Colors.white,
                               ),
                               hintText: 'Enter Username',
@@ -224,12 +230,7 @@ class _LoginPageState extends State<LoginPage> {
                               onPressed: () {
                                 if (_formKey.currentState.validate()) {
                                   print("success ok");
-                                } else {
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) =>
-                                          CustomDialogNotificationPost(
-                                              text: "เกิดข้อผิดพลาด"));
+                                  save();
                                 }
                               },
                               child: Text(

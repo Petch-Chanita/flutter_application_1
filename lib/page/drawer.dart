@@ -5,6 +5,7 @@ import 'package:flutter_application_1/apptheme/app-theme.dart';
 import 'package:flutter_application_1/models/dataUser.dart';
 import 'package:flutter_application_1/page/drawer/collapsing_navigation_drawer.dart';
 import 'package:flutter_application_1/page/empty.dart';
+import 'package:flutter_application_1/page/login_page.dart';
 import 'package:flutter_application_1/page/not-empty.dart';
 import 'package:flutter_application_1/page/profiles.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -206,8 +207,20 @@ class _drawerState extends State<drawer> {
                     color: Colors.white,
                     fontWeight: FontWeight.bold),
               ),
-              onTap: () {
-                // Navigator.pushNamed(context, '/Login');
+              onTap: () async {
+                SharedPreferences preferences =
+                    await SharedPreferences.getInstance();
+                // preferences.setString('mineID', null);
+                // preferences.setString('token', null);
+
+                preferences.clear();
+
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => LoginPage(),
+                    ),
+                    (route) => false);
               },
             ),
           ],
