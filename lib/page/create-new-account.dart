@@ -23,7 +23,7 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
   UserRegister dataRegister;
   Future save() async {
     // final byteData = await rootBundle.load('assets/images/alucard.jpg');
-    var value;
+    // var value;
     var res = await http.post("http://202.28.34.197:9000/authen/register",
         headers: <String, String>{
           'Content-Type': 'application/json;charSet=UTF-8'
@@ -43,7 +43,7 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
     print('password' + ': ' + user.password);
     print(res.body);
     //
-    value = jsonDecode(res.body);
+    // value = jsonDecode(res.body);
     print(dataRegister.email);
     // print(dataRegister.error.keyValue.email);
     // print('===>${dataRegister.error.keyValue.username}');

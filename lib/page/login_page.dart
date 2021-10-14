@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_application_1/models/dataLogin.dart';
 import 'package:flutter_application_1/models/users.dart';
 import 'package:flutter_application_1/page/create-new-account.dart';
 import 'package:flutter_application_1/page/drawer.dart';
@@ -43,25 +44,24 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future save() async {
-    var value;
-    var user_id;
+    UserLogin value;
+
+    var data = {"username": ctrl_username.text, "password": ctrl_password.text};
     var res = await http.post("http://202.28.34.197:9000/authen/login",
         headers: <String, String>{
           'Content-Type': 'application/json;charSet=UTF-8'
         },
-        body:
-            jsonEncode({'username': user.username, 'password': user.password}));
+        body: jsonEncode(data));
 
-    print(user.username);
+    print(ctrl_username);
     print(user.password);
-    value = jsonDecode(res.body);
-    user_id = value["_id"];
+    value = UserLoginFromJson(res.body);
 
-    print(value);
-    if (value["status"] != 'error') {
+    // print(value);
+    if (value.success == 0) {
       SharedPreferences preferences = await SharedPreferences.getInstance();
-      preferences.setString('mineID', value["_id"]);
-      preferences.setString('token', value["data"]);
+      preferences.setString('mineID', value.id);
+      preferences.setString('token', value.data);
 
       Navigator.pushAndRemoveUntil(
           context,
@@ -69,12 +69,7 @@ class _LoginPageState extends State<LoginPage> {
             builder: (BuildContext context) => HomePage(),
           ),
           (route) => false);
-
-      // Navigator.push(
-      //     context, new MaterialPageRoute(builder: (context) => HomePage()));
-
     } else {
-      print('hhhhhhhhhhh');
       showDialog(
           context: context,
           builder: (context) =>
@@ -82,6 +77,8 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  TextEditingController ctrl_password = TextEditingController();
+  TextEditingController ctrl_username = TextEditingController();
   User user = User('', '', '', '');
   @override
   Widget build(BuildContext context) {
@@ -138,8 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                               return null;
                             }
                           },
-                          controller:
-                              TextEditingController(text: user.username),
+                          controller: ctrl_username,
                           onChanged: (value) {
                             user.username = value;
                           },
@@ -185,8 +181,7 @@ class _LoginPageState extends State<LoginPage> {
                             }
                           },
                           obscureText: true,
-                          controller:
-                              TextEditingController(text: user.password),
+                          controller: ctrl_password,
                           onChanged: (value) {
                             user.password = value;
                           },
