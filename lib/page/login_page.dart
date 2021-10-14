@@ -44,9 +44,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future save() async {
+    print('llllllllllllllllllllll');
     UserLogin value;
 
     var data = {"username": ctrl_username.text, "password": ctrl_password.text};
+    print(jsonEncode(data));
     var res = await http.post("http://202.28.34.197:9000/authen/login",
         headers: <String, String>{
           'Content-Type': 'application/json;charSet=UTF-8'
@@ -225,6 +227,7 @@ class _LoginPageState extends State<LoginPage> {
                               onPressed: () {
                                 if (_formKey.currentState.validate()) {
                                   print("success ok");
+                                  print("KOOOOOOOOOOO");
                                   save();
                                 }
                               },
