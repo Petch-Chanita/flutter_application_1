@@ -42,61 +42,131 @@ class _Not_emptyState extends State<Not_empty> {
   Widget build(BuildContext context) {
     return Center(
       child: Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            elevation: 0.0,
-            backgroundColor: MyTheme.draweBackgroundColorDrawer,
-            title: Text(
-              'ห้องถูกใช้งาน',
-              style: GoogleFonts.acme(
-                fontSize: 25.0,
-                fontWeight: FontWeight.bold,
-              ),
+        appBar: AppBar(
+          centerTitle: true,
+          elevation: 0.0,
+          backgroundColor: MyTheme.draweBackgroundColorDrawer,
+          title: Text(
+            'ห้องถูกใช้งาน',
+            style: GoogleFonts.acme(
+              fontSize: 25.0,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          backgroundColor: MyTheme.draweBackgroundColorDrawer,
-          body: FutureBuilder(
-              future: loadnot_empty(),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData) {
-                  print('snashot${snapshot.data}');
-                  if (snapshot.data == true) {
-                    return ListView(
-                      children: [
-                        SizedBox(
-                          height: 18.0,
+        ),
+        backgroundColor: MyTheme.draweBackgroundColorDrawer,
+        body: FutureBuilder(
+          future: loadnot_empty(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            // if (snapshot.hasError) {
+            //   return Text(
+            //       "เกิดข้อผิดพลาดในการโหลดข้อมูล ${snapshot.hasError} ${snapshot.error}");
+            // }
+            switch (snapshot.connectionState) {
+              case ConnectionState.active:
+                return Text("ข้อมูลคือ${snapshot.data}");
+                break;
+              case ConnectionState.done:
+                return (dataRoom.length == 0)
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "ไม่พบข้อมูล",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                          ],
                         ),
-                        GridView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            gridDelegate:
-                                SliverGridDelegateWithMaxCrossAxisExtent(
-                                    maxCrossAxisExtent: 200,
-                                    childAspectRatio: 3 / 2,
-                                    crossAxisSpacing: 0,
-                                    mainAxisSpacing: 10,
-                                    mainAxisExtent: 180),
-                            itemCount: dataRoom.length,
-                            itemBuilder: (BuildContext ctx, index) {
-                              return Column(
-                                children: [
-                                  WidgetRoom(dataRoom: dataRoom[index]),
-                                ],
-                              );
-                            }),
-                      ],
-                    );
-                  } else {
-                    return Center(
-                      child: Text("Error"),
-                    );
-                  }
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              })),
+                      )
+                    : ListView(
+                        children: [
+                          SizedBox(
+                            height: 18.0,
+                          ),
+                          GridView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  SliverGridDelegateWithMaxCrossAxisExtent(
+                                      maxCrossAxisExtent: 200,
+                                      childAspectRatio: 3 / 2,
+                                      crossAxisSpacing: 0,
+                                      mainAxisSpacing: 10,
+                                      mainAxisExtent: 180),
+                              itemCount: dataRoom.length,
+                              itemBuilder: (BuildContext ctx, index) {
+                                return Column(
+                                  children: [
+                                    WidgetRoom(dataRoom: dataRoom[index]),
+                                  ],
+                                );
+                              }),
+                        ],
+                      );
+                break;
+              case ConnectionState.waiting:
+                return Center(
+                  child: Column(
+                    children: [
+                      Text("www"),
+                      CircularProgressIndicator(),
+                    ],
+                  ),
+                );
+              case ConnectionState.none:
+                return Text("No Connection");
+                break;
+              default:
+                print("something");
+            }
+            return null;
+          },
+        ),
+        // body: FutureBuilder(
+        //     future: loadnot_empty(),
+        //     builder: (BuildContext context, AsyncSnapshot snapshot) {
+        //       if (snapshot.hasData) {
+        //         print('snashot${snapshot.data}');
+        //         if (snapshot.data == true) {
+        //           return ListView(
+        //             children: [
+        //               SizedBox(
+        //                 height: 18.0,
+        //               ),
+        //               GridView.builder(
+        //                   shrinkWrap: true,
+        //                   physics: NeverScrollableScrollPhysics(),
+        //                   gridDelegate:
+        //                       SliverGridDelegateWithMaxCrossAxisExtent(
+        //                           maxCrossAxisExtent: 200,
+        //                           childAspectRatio: 3 / 2,
+        //                           crossAxisSpacing: 0,
+        //                           mainAxisSpacing: 10,
+        //                           mainAxisExtent: 180),
+        //                   itemCount: dataRoom.length,
+        //                   itemBuilder: (BuildContext ctx, index) {
+        //                     return Column(
+        //                       children: [
+        //                         WidgetRoom(dataRoom: dataRoom[index]),
+        //                       ],
+        //                     );
+        //                   }),
+        //             ],
+        //           );
+        //         } else {
+        //           return Center(
+        //             child: Text("Error"),
+        //           );
+        //         }
+        //       } else {
+        //         return Center(
+        //           child: CircularProgressIndicator(),
+        //         );
+        //       }
+        //     })
+      ),
     );
   }
 }

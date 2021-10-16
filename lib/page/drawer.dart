@@ -27,6 +27,7 @@ Future<bool> loadData() async {
   mineID = preferences.getString("mineID");
   token = preferences.getString("token");
 
+  print('sssss${mineID}+ppppp');
   String apiUrl = 'http://202.28.34.197:9000/users/user/$mineID';
 
   final res = await http.get(Uri.parse(apiUrl));

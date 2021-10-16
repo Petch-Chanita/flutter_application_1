@@ -420,14 +420,28 @@ class _ProfilesState extends State<Profiles> {
                                                   'dataprofiles${dataEditProfile.success}');
                                               if (dataEditProfile.success ==
                                                   true) {
-                                                setState(() {});
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) =>
+                                                        CustomDialogNotificationPost(
+                                                          image:
+                                                              'https://cdn.dribbble.com/users/147386/screenshots/5315437/success-tick-dribbble.gif',
+                                                          text: "แก้ไขสำเร็จ",
+                                                          discription: "",
+                                                        )).then((value) {
+                                                  setState(() {});
+                                                });
                                               } else {
                                                 showDialog(
                                                     context: context,
                                                     builder: (context) =>
                                                         CustomDialogNotificationPost(
+                                                          image:
+                                                              'https://png.pngtree.com/png-vector/20190228/ourlarge/pngtree-wrong-false-icon-design-template-vector-isolated-png-image_711430.jpg',
                                                           text:
                                                               "ไม่สามารถแก้ไขได้",
+                                                          discription:
+                                                              "มีชื่อผู้ใช้ หรืออีเมล์นี้แล้ว กรุณากรอกข้อมูลใหม่อีกครั้ง",
                                                         ));
                                               }
                                               // print('image,' +
@@ -461,11 +475,9 @@ class _ProfilesState extends State<Profiles> {
 }
 
 class CustomDialogNotificationPost extends StatelessWidget {
-  final String text;
+  final String image, text, discription;
 
-  CustomDialogNotificationPost({
-    this.text,
-  });
+  CustomDialogNotificationPost({this.image, this.text, this.discription});
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -515,7 +527,7 @@ class CustomDialogNotificationPost extends StatelessWidget {
                   style: TextStyle(color: Colors.grey.shade800, fontSize: 16.0),
                 ),
                 Text(
-                  "มีชื่อผู้ใช้ หรืออีเมล์นี้แล้ว กรุณากรอกข้อมูลใหม่อีกครั้ง",
+                  this.discription,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.grey,
@@ -561,9 +573,7 @@ class CustomDialogNotificationPost extends StatelessWidget {
             child: CircleAvatar(
               backgroundColor: Colors.white,
               radius: 50,
-              backgroundImage: NetworkImage(
-                'https://png.pngtree.com/png-vector/20190228/ourlarge/pngtree-wrong-false-icon-design-template-vector-isolated-png-image_711430.jpg',
-              ),
+              backgroundImage: NetworkImage(this.image),
             ),
           )
         ],
