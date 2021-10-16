@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -105,180 +106,260 @@ class _LoginPageState extends State<LoginPage> {
         ),
         Scaffold(
           backgroundColor: Colors.transparent,
-          body: Column(
-            children: [
-              Flexible(
-                child: Center(
-                  child: Text(
-                    'LOGIN',
-                    style: GoogleFonts.acme(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 50,
-                        color: Colors.white),
-                  ),
-                ),
-              ),
-              Container(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: TextFormField(
-                          cursorColor: Colors.white,
-                          validator: (value) {
-                            if (value == null ||
-                                value.isEmpty ||
-                                value.trim() == "") {
-                              return 'Username is required';
-                            } else {
-                              return null;
-                            }
-                          },
-                          controller: ctrl_username,
-                          onChanged: (value) {
-                            user.username = value;
-                          },
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          decoration: InputDecoration(
-                              fillColor: Colors.grey[500].withOpacity(0.5),
-                              filled: true,
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white),
-                                  borderRadius: BorderRadius.circular(16)),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16.0)),
-                              prefixIcon: Icon(
-                                FontAwesomeIcons.userAlt,
-                                color: Colors.white,
-                              ),
-                              hintText: 'Enter Username',
-                              hintStyle: TextStyle(
-                                color: Colors.white54,
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              contentPadding: new EdgeInsets.symmetric(
-                                  vertical: 15.0, horizontal: 10.0),
-                              labelStyle: TextStyle(color: Colors.white)),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: TextFormField(
-                          cursorColor: Colors.white,
-                          validator: (value) {
-                            if (value == null ||
-                                value.isEmpty ||
-                                value.trim() == "") {
-                              return 'Password is required';
-                            } else {
-                              return null;
-                            }
-                          },
-                          obscureText: true,
-                          controller: ctrl_password,
-                          onChanged: (value) {
-                            user.password = value;
-                          },
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          decoration: InputDecoration(
-                              fillColor: Colors.grey[500].withOpacity(0.5),
-                              filled: true,
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white),
-                                  borderRadius: BorderRadius.circular(16)),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16.0)),
-                              prefixIcon: Icon(
-                                Icons.vpn_key_rounded,
-                                color: Colors.white,
-                              ),
-                              hintText: 'Enter Password',
-                              hintStyle: TextStyle(
-                                color: Colors.white54,
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              contentPadding: new EdgeInsets.symmetric(
-                                  vertical: 15.0, horizontal: 10.0),
-                              labelStyle: TextStyle(color: Colors.white)),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20.0),
-                        child: Container(
-                          height: 55,
-                          width: 340,
-                          child: FlatButton(
-                              color: Colors.deepPurple,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16.0)),
-                              onPressed: () {
-                                if (_formKey.currentState.validate()) {
-                                  print("success ok");
-                                  print("KOOOOOOOOOOO");
-                                  save();
-                                }
-                              },
-                              child: Text(
-                                "Login",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
-                              )),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 25,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Don't have an Account ? ",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18.0,
-                      height: 1.5,
+          body: SafeArea(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (_) {
+                              return AlertDialog(
+                                actions: [],
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        IconButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            icon: Icon(Icons.clear)),
+                                      ],
+                                    ),
+                                    Text(
+                                      "ดาวน์โหลดแอปพลิเคชัน",
+                                      style: GoogleFonts.mali(
+                                          // color: Colors.white,
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.normal),
+                                    ),
+                                    Container(
+                                      width: 200,
+                                      height: 200,
+                                      child: QrImage(
+                                        data:
+                                            "https://drive.google.com/drive/folders/1LfP-b3FNfrc24AmohHw9bYbt-qwxruJx",
+                                        version: QrVersions.auto,
+                                        size: 100,
+                                        // backgroundColor: Colors.white,
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            primary: Colors.purple,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 100, vertical: 10),
+                                          ),
+                                          child: Text(
+                                            'ปิด',
+                                            style: GoogleFonts.mali(
+                                                // color: Colors.white,
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.normal),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              );
+                            });
+                      },
+                      child: Card(
+                          child: Container(
+                        width: 30,
+                        height: 30,
+                        child: Image.asset('assets/images/qr-code02.png'),
+                      )),
                     ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          new MaterialPageRoute(
-                              builder: (context) => CreateNewAccount()));
-                    },
+                  ],
+                ),
+                Flexible(
+                  child: Center(
                     child: Text(
-                      "Sign up",
-                      style: TextStyle(
-                          color: Colors.deepPurpleAccent,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold),
+                      'LOGIN',
+                      style: GoogleFonts.acme(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 50,
+                          color: Colors.white),
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
+                ),
+                Container(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: TextFormField(
+                            cursorColor: Colors.white,
+                            validator: (value) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  value.trim() == "") {
+                                return 'Username is required';
+                              } else {
+                                return null;
+                              }
+                            },
+                            controller: ctrl_username,
+                            onChanged: (value) {
+                              user.username = value;
+                            },
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            decoration: InputDecoration(
+                                fillColor: Colors.grey[500].withOpacity(0.5),
+                                filled: true,
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.white),
+                                    borderRadius: BorderRadius.circular(16)),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16.0)),
+                                prefixIcon: Icon(
+                                  FontAwesomeIcons.userAlt,
+                                  color: Colors.white,
+                                ),
+                                hintText: 'Enter Username',
+                                hintStyle: TextStyle(
+                                  color: Colors.white54,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                contentPadding: new EdgeInsets.symmetric(
+                                    vertical: 15.0, horizontal: 10.0),
+                                labelStyle: TextStyle(color: Colors.white)),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: TextFormField(
+                            cursorColor: Colors.white,
+                            validator: (value) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  value.trim() == "") {
+                                return 'Password is required';
+                              } else {
+                                return null;
+                              }
+                            },
+                            obscureText: true,
+                            controller: ctrl_password,
+                            onChanged: (value) {
+                              user.password = value;
+                            },
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            decoration: InputDecoration(
+                                fillColor: Colors.grey[500].withOpacity(0.5),
+                                filled: true,
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.white),
+                                    borderRadius: BorderRadius.circular(16)),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16.0)),
+                                prefixIcon: Icon(
+                                  Icons.vpn_key_rounded,
+                                  color: Colors.white,
+                                ),
+                                hintText: 'Enter Password',
+                                hintStyle: TextStyle(
+                                  color: Colors.white54,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                contentPadding: new EdgeInsets.symmetric(
+                                    vertical: 15.0, horizontal: 10.0),
+                                labelStyle: TextStyle(color: Colors.white)),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20.0),
+                          child: Container(
+                            height: 55,
+                            width: 340,
+                            child: FlatButton(
+                                color: Colors.deepPurple,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16.0)),
+                                onPressed: () {
+                                  if (_formKey.currentState.validate()) {
+                                    print("success ok");
+                                    print("KOOOOOOOOOOO");
+                                    save();
+                                  }
+                                },
+                                child: Text(
+                                  "Login",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                )),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 25,
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              )
-            ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Don't have an Account ? ",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18.0,
+                        height: 1.5,
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (context) => CreateNewAccount()));
+                      },
+                      child: Text(
+                        "Sign up",
+                        style: TextStyle(
+                            color: Colors.deepPurpleAccent,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         )
       ],
