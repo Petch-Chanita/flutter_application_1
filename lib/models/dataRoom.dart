@@ -20,6 +20,7 @@ class DataRoom {
     this.luminance,
     this.people,
     this.v,
+    this.datetime,
   });
 
   String id;
@@ -30,6 +31,7 @@ class DataRoom {
   dynamic luminance;
   dynamic people;
   int v;
+  String datetime;
 
   factory DataRoom.fromJson(Map<String, dynamic> json) => DataRoom(
         id: json["_id"],
@@ -40,6 +42,7 @@ class DataRoom {
         luminance: json["luminance"],
         people: json["people"],
         v: json["__v"],
+        datetime: json["datetime"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -51,5 +54,6 @@ class DataRoom {
         "luminance": luminance,
         "people": people,
         "__v": v,
+        "datetime": datetime,
       };
 }

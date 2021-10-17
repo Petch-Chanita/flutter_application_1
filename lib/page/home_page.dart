@@ -56,76 +56,103 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return true;
   }
 
+  Future<void> loadInfor() async {
+    String apiUrl = 'http://202.28.34.197:9000/rooms/refresh';
+    await http.get(Uri.parse(apiUrl));
+    return Future.delayed(
+      Duration(seconds: 10),
+    );
+  }
+
   Widget build(BuildContext context) {
     return Center(
       child: Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            elevation: 0.0,
-            backgroundColor: MyTheme.draweBackgroundColorDrawer,
-            title: Text(
-              'Home',
-              style: GoogleFonts.acme(
-                fontSize: 25.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            actions: <Widget>[
-              IconButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => SearchPage()));
-                  },
-                  icon: Icon(Icons.search)),
-            ],
-          ),
-          drawer: drawer(),
-          // drawer: CollapsingNavigationDrawer(),
-          // backgroundColor: MyTheme.selectedColor,
-          // drawer: CollapsingNavigationDrawer(),
+        appBar: AppBar(
+          centerTitle: true,
+          elevation: 0.0,
           backgroundColor: MyTheme.draweBackgroundColorDrawer,
-          body: FutureBuilder(
-              future: loadRoom(),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData) {
-                  print('snashot${snapshot.data}');
-                  if (snapshot.data == true) {
-                    return ListView(
-                      children: [
-                        SizedBox(
-                          height: 18.0,
-                        ),
-                        GridView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            gridDelegate:
-                                SliverGridDelegateWithMaxCrossAxisExtent(
-                                    maxCrossAxisExtent: 200,
-                                    childAspectRatio: 3 / 2,
-                                    crossAxisSpacing: 0,
-                                    mainAxisSpacing: 10,
-                                    mainAxisExtent: 180),
-                            itemCount: dataRoom.length,
-                            itemBuilder: (BuildContext ctx, index) {
-                              return Column(
-                                children: [
-                                  WidgetRoom(dataRoom: dataRoom[index]),
-                                ],
-                              );
-                            }),
-                      ],
-                    );
-                  } else {
-                    return Center(
-                      child: Text("Error"),
-                    );
-                  }
+          title: Text(
+            'Home',
+            style: GoogleFonts.acme(
+              fontSize: 25.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          actions: <Widget>[
+            IconButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => SearchPage()));
+                },
+                icon: Icon(Icons.search)),
+          ],
+        ),
+        drawer: drawer(),
+        backgroundColor: MyTheme.draweBackgroundColorDrawer,
+        body: FutureBuilder(
+            future: loadRoom(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                print('snashot${snapshot.data}');
+                if (snapshot.data == true) {
+                  return ListView(
+                    children: [
+                      SizedBox(
+                        height: 18.0,
+                      ),
+                      GridView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              SliverGridDelegateWithMaxCrossAxisExtent(
+                                  maxCrossAxisExtent: 200,
+                                  childAspectRatio: 3 / 2,
+                                  crossAxisSpacing: 0,
+                                  mainAxisSpacing: 10,
+                                  mainAxisExtent: 200),
+                          itemCount: dataRoom.length,
+                          itemBuilder: (BuildContext ctx, index) {
+                            return Column(
+                              children: [
+                                WidgetRoom(dataRoom: dataRoom[index]),
+                              ],
+                            );
+                          }),
+                    ],
+                  );
                 } else {
                   return Center(
-                    child: CircularProgressIndicator(),
+                    child: Text("Error"),
                   );
                 }
-              })),
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            }),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.refresh),
+          onPressed: () {
+            loadInfor();
+            // RefreshIndicator(
+            //   onRefresh: loadInfor,
+            //   child: ListView(),
+            // );
+            setState(() {});
+          },
+          backgroundColor: Colors.blueGrey,
+        ),
+        bottomNavigationBar: BottomAppBar(
+          shape: CircularNotchedRectangle(),
+          notchMargin: 10,
+          color: Colors.blueGrey[200],
+          child: Container(
+            height: 50.0,
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      ),
     );
   }
 }
@@ -151,19 +178,47 @@ class WidgetRoom extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           // crossAxisAlignment: CrossAxisAlignment.center,
-
           children: [
             Text(
               dataRoom.roomNumber,
-              style: TextStyle(color: Colors.white, fontSize: 20),
+              style: GoogleFonts.mali(
+                  color: Colors.white,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 15.0,
             ),
             Text(
               dataRoom.status,
-              style: TextStyle(
+              style: GoogleFonts.mali(
                   color: Colors.greenAccent,
-                  fontSize: 20,
+                  fontSize: 16.0,
                   fontWeight: FontWeight.bold),
             ),
+            SizedBox(
+              height: 20.0,
+            ),
+            dataRoom.datetime != null
+                ? Text(
+                    dataRoom.datetime.split(' ')[0],
+                    style: GoogleFonts.mali(
+                        color: Colors.white,
+                        fontSize: 10.0,
+                        fontWeight: FontWeight.bold),
+                  )
+                : Container(),
+            dataRoom.datetime != null
+                ? Text(
+                    dataRoom.datetime != null
+                        ? dataRoom.datetime.split(' ')[1]
+                        : "",
+                    style: GoogleFonts.mali(
+                        color: Colors.white,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.bold),
+                  )
+                : Container(),
           ],
         ),
         width: 160,
