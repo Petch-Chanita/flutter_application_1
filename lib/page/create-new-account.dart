@@ -141,7 +141,7 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
 
                                   // }
                                   else {
-                                    return 'Enter valid email';
+                                    return 'Enter valid Email';
                                   }
                                 },
                                 controller:
@@ -430,7 +430,7 @@ class CustomDialogNotificationPost extends StatelessWidget {
                 'https://png.pngtree.com/png-vector/20190228/ourlarge/pngtree-wrong-false-icon-design-template-vector-isolated-png-image_711430.jpg',
               ),
             ),
-          )
+          ),
         ],
       ),
     );

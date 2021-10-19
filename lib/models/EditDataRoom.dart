@@ -1,17 +1,36 @@
 // To parse this JSON data, do
 //
-//     final search = searchFromJson(jsonString);
+//     final editDataRoom = editDataRoomFromJson(jsonString);
 
 import 'dart:convert';
 
-List<Search> searchFromJson(String str) =>
-    List<Search>.from(json.decode(str).map((x) => Search.fromJson(x)));
+EditDataRoom editDataRoomFromJson(String str) =>
+    EditDataRoom.fromJson(json.decode(str));
 
-String searchToJson(List<Search> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String editDataRoomToJson(EditDataRoom data) => json.encode(data.toJson());
 
-class Search {
-  Search({
+class EditDataRoom {
+  EditDataRoom({
+    this.success,
+    this.data,
+  });
+
+  bool success;
+  Data data;
+
+  factory EditDataRoom.fromJson(Map<String, dynamic> json) => EditDataRoom(
+        success: json["success"],
+        data: Data.fromJson(json["data"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "success": success,
+        "data": data.toJson(),
+      };
+}
+
+class Data {
+  Data({
     this.id,
     this.roomNumber,
     this.status,
@@ -20,20 +39,18 @@ class Search {
     this.luminance,
     this.people,
     this.v,
-    this.datetime,
   });
 
   String id;
-  String roomNumber;
+  dynamic roomNumber;
   String status;
   dynamic temperature;
   dynamic motion;
   dynamic luminance;
   dynamic people;
   int v;
-  String datetime;
 
-  factory Search.fromJson(Map<String, dynamic> json) => Search(
+  factory Data.fromJson(Map<String, dynamic> json) => Data(
         id: json["_id"],
         roomNumber: json["Room_number"],
         status: json["status"],
@@ -42,7 +59,6 @@ class Search {
         luminance: json["luminance"],
         people: json["people"],
         v: json["__v"],
-        datetime: json["datetime"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -54,6 +70,5 @@ class Search {
         "luminance": luminance,
         "people": people,
         "__v": v,
-        "datetime": datetime,
       };
 }

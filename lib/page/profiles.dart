@@ -276,8 +276,13 @@ class _ProfilesState extends State<Profiles> {
                                           value.isEmpty ||
                                           value.trim() == "") {
                                         return "Please enter a Email.";
+                                      } else if (RegExp(
+                                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                          .hasMatch(value)) {
+                                        return null;
+                                      } else {
+                                        return 'Enter valid Email';
                                       }
-                                      return null;
                                     },
                                     controller: email_ctrl,
                                     style: TextStyle(color: Colors.white),
@@ -320,7 +325,7 @@ class _ProfilesState extends State<Profiles> {
                                       if (value == null ||
                                           value.isEmpty ||
                                           value.trim() == "") {
-                                        return "Please enter user name.";
+                                        return "Please enter Username.";
                                       }
                                       return null;
                                     },
@@ -545,22 +550,6 @@ class CustomDialogNotificationPost extends StatelessWidget {
                           Navigator.pop(context);
                         },
                         child: Text('OK'))
-                    // TextButton(
-                    //   onPressed: () {
-                    //     Navigator.pop(context);
-                    //   },
-                    //   child: Text(
-                    //     "อยู่หน้านี้ต่อ",
-                    //     style: TextStyle(color: Colors.black),
-                    //   ),
-                    // ),
-                    // TextButton(
-                    //   onPressed: () {
-                    //     Navigator.pop(context);
-                    //     Navigator.pop(context);
-                    //   },
-                    //   child: Text("ออกไปหน้าอื่น"),
-                    // ),
                   ],
                 ),
               ],

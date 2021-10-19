@@ -85,9 +85,9 @@ class _SearchPageState extends State<SearchPage> {
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: 200,
                   childAspectRatio: 3 / 2,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20,
-                  mainAxisExtent: 160),
+                  crossAxisSpacing: 0,
+                  mainAxisSpacing: 10,
+                  mainAxisExtent: 180),
               itemCount: dataSearch.length,
               itemBuilder: (BuildContext ctx, index) {
                 return Column(
@@ -127,19 +127,48 @@ class WidgetRoom extends StatelessWidget {
           children: [
             Text(
               dataRoom.roomNumber,
-              style: TextStyle(color: Colors.white, fontSize: 20),
+              style: GoogleFonts.mali(
+                  color: Colors.white,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 15.0,
             ),
             Text(
               dataRoom.status,
-              style: TextStyle(
+              style: GoogleFonts.mali(
                   color: Colors.greenAccent,
-                  fontSize: 20,
+                  fontSize: 16.0,
                   fontWeight: FontWeight.bold),
             ),
+            SizedBox(
+              height: 20.0,
+            ),
+            dataRoom.datetime != null
+                ? Text(
+                    dataRoom.datetime.split(' ')[0],
+                    style: GoogleFonts.mali(
+                        color: Colors.white,
+                        fontSize: 10.0,
+                        fontWeight: FontWeight.bold),
+                  )
+                : Container(),
+            dataRoom.datetime != null
+                ? Text(
+                    dataRoom.datetime != null
+                        ? dataRoom.datetime.split(' ')[1]
+                        : "",
+                    style: GoogleFonts.mali(
+                        color: Colors.white,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.bold),
+                  )
+                : Container(),
           ],
         ),
-        width: 150,
-        height: 150,
+        width: 160,
+        height: 160,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: MyTheme.drawerBackgroundColor,

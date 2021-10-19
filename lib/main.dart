@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/apptheme/app-theme.dart';
+import 'package:flutter_application_1/page/homeAdmin.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'page/create-new-account.dart';
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
       // debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: MyTheme.drawerBackgroundColor,
-        accentColor: MyTheme.selectedColor,
+        // accentColor: MyTheme.selectedColor,
         textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => LoginPage(),
         'CreateNewAccount': (context) => CreateNewAccount(),
         '/HomePage': (context) => HomePage(),
+        '/Homeadmin': (context) => HomeAdmin(),
         '/Login': (context) => LoginPage(),
       },
     );

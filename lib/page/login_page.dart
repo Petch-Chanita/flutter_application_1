@@ -4,6 +4,7 @@ import 'package:flutter_application_1/models/dataLogin.dart';
 import 'package:flutter_application_1/models/users.dart';
 import 'package:flutter_application_1/page/create-new-account.dart';
 import 'package:flutter_application_1/page/drawer.dart';
+import 'package:flutter_application_1/page/homeAdmin.dart';
 import 'package:flutter_application_1/page/home_page.dart';
 import 'package:flutter_application_1/page/slidepage.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -35,12 +36,21 @@ class _LoginPageState extends State<LoginPage> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var check_mineID = preferences.get("mineID");
     if (check_mineID != null) {
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) => HomePage(),
-          ),
-          (route) => false);
+      if (check_mineID == "6114e9898a2df33b20df2008") {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => HomeAdmin(),
+            ),
+            (route) => false);
+      } else {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => HomePage(),
+            ),
+            (route) => false);
+      }
     }
   }
 
@@ -65,13 +75,23 @@ class _LoginPageState extends State<LoginPage> {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       preferences.setString('mineID', value.id);
       preferences.setString('token', value.data);
+      print("value" + value.id);
 
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) => HomePage(),
-          ),
-          (route) => false);
+      if (value.id == "6114e9898a2df33b20df2008") {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => HomeAdmin(),
+            ),
+            (route) => false);
+      } else {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => HomePage(),
+            ),
+            (route) => false);
+      }
     } else {
       showDialog(
           context: context,

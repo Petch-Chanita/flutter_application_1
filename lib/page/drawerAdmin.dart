@@ -3,20 +3,20 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/apptheme/app-theme.dart';
 import 'package:flutter_application_1/models/dataUser.dart';
-import 'package:flutter_application_1/page/drawer/collapsing_navigation_drawer.dart';
-import 'package:flutter_application_1/page/empty.dart';
+import 'package:flutter_application_1/page/EmptyAdmin.dart';
+import 'package:flutter_application_1/page/NotEmptyAdmin.dart';
 import 'package:flutter_application_1/page/login_page.dart';
-import 'package:flutter_application_1/page/not-empty.dart';
+
 import 'package:flutter_application_1/page/profiles.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-class drawer extends StatefulWidget {
-  drawer({Key key}) : super(key: key);
+class Admindrawer extends StatefulWidget {
+  Admindrawer({Key key}) : super(key: key);
 
   @override
-  _drawerState createState() => _drawerState();
+  _Admindrawer createState() => _Admindrawer();
 }
 
 String mineID;
@@ -41,7 +41,7 @@ Future<bool> loadData() async {
   return true;
 }
 
-class _drawerState extends State<drawer> {
+class _Admindrawer extends State<Admindrawer> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -50,7 +50,7 @@ class _drawerState extends State<drawer> {
           if (snapshot.hasData) {
             if (snapshot.data == true) {
               return Container(
-                child: drawer(),
+                child: Admindrawer(),
               );
             } else {
               return Center(
@@ -65,7 +65,7 @@ class _drawerState extends State<drawer> {
         });
   }
 
-  Widget drawer() {
+  Widget Admindrawer() {
     return Drawer(
       child: Container(
         color: MyTheme.drawerBackgroundColor,
@@ -79,7 +79,7 @@ class _drawerState extends State<drawer> {
                     child: Row(
                       children: [
                         Text(
-                          'USER ROOM',
+                          'ADMIN ROOM',
                           // overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.mali(
                               color: Colors.white,
@@ -135,8 +135,8 @@ class _drawerState extends State<drawer> {
             ),
             ListTile(
               onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Empty()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => EmptyAdmin()));
               },
               leading: Icon(
                 Icons.sensor_door_outlined,
@@ -153,7 +153,7 @@ class _drawerState extends State<drawer> {
             ListTile(
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Not_empty()));
+                    MaterialPageRoute(builder: (context) => Not_EmptyAdmin()));
               },
               leading: Icon(
                 Icons.remove_circle,
@@ -182,9 +182,6 @@ class _drawerState extends State<drawer> {
               onTap: () async {
                 SharedPreferences preferences =
                     await SharedPreferences.getInstance();
-                // preferences.setString('mineID', null);
-                // preferences.setString('token', null);
-
                 preferences.clear();
 
                 Navigator.pushAndRemoveUntil(

@@ -1,15 +1,9 @@
-// import 'package:flutter/foundation.dart';
-// import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/apptheme/app-theme.dart';
 import 'package:flutter_application_1/models/dataRoom.dart';
 import 'package:flutter_application_1/models/dataUser.dart';
-// import 'package:google_fonts/google_fonts.dart';
 
-import 'package:flutter_application_1/page/app_bar.dart';
 import 'package:flutter_application_1/page/drawer.dart';
-import 'package:flutter_application_1/page/login_page.dart';
 import 'package:flutter_application_1/page/searchpage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,9 +30,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   String mineID;
   String token;
   DataUser dataUser;
-  List<DataRoom> dataRoom;
+  List<DataRoom> dataRoom = [];
 
   Future<bool> loadRoom() async {
+    dataRoom = [];
     SharedPreferences preferences = await SharedPreferences.getInstance();
     mineID = preferences.getString("mineID");
     token = preferences.getString("token");
@@ -56,12 +51,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return true;
   }
 
-  Future<void> loadInfor() async {
+  Future loadInfor() async {
     String apiUrl = 'http://202.28.34.197:9000/rooms/refresh';
-    await http.get(Uri.parse(apiUrl));
-    return Future.delayed(
-      Duration(seconds: 10),
-    );
+
+    var res = await http.get(Uri.parse(apiUrl), headers: {
+      'User-Agent': 'PostmanRuntime/7.26.8',
+      'Accept': '*/*',
+      'Accept-Encoding': 'gzip, deflate, br',
+      'Connection': 'keep-alive'
+    });
+    print(res.body);
+    // await loadRoom();
+    return true;
+    // return Future.delayed(new Duration(seconds: 3));
   }
 
   Widget build(BuildContext context) {
@@ -131,15 +133,29 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 );
               }
             }),
-        floatingActionButton: FloatingActionButton(
+        floatingActionButton: new FloatingActionButton(
           child: Icon(Icons.refresh),
-          onPressed: () {
-            loadInfor();
-            // RefreshIndicator(
-            //   onRefresh: loadInfor,
-            //   child: ListView(),
-            // );
+          onPressed: () async {
+            await loadInfor();
+            // Future.delayed(new Duration(seconds: 4));
+            showDialog(
+                context: context,
+                builder: (contex) {
+                  return AlertDialog(
+                      content: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text("กรุณารอสักครู่...   "),
+                      CircularProgressIndicator()
+                    ],
+                  ));
+                });
+            print("hhhhhhhhhkkk");
             setState(() {});
+            Navigator.pop(context);
           },
           backgroundColor: Colors.blueGrey,
         ),
