@@ -197,6 +197,7 @@ class WidgetRoom extends StatelessWidget {
           children: [
             Text(
               dataRoom.roomNumber,
+              // overflow: TextOverflow.ellipsis,
               style: GoogleFonts.mali(
                   color: Colors.white,
                   fontSize: 16.0,
@@ -215,7 +216,7 @@ class WidgetRoom extends StatelessWidget {
             SizedBox(
               height: 20.0,
             ),
-            dataRoom.datetime != null
+            dataRoom.datetime != null && dataRoom.datetime != ""
                 ? Text(
                     dataRoom.datetime.split(' ')[0],
                     style: GoogleFonts.mali(
@@ -224,7 +225,7 @@ class WidgetRoom extends StatelessWidget {
                         fontWeight: FontWeight.bold),
                   )
                 : Container(),
-            dataRoom.datetime != null
+            dataRoom.datetime != null && dataRoom.datetime != ""
                 ? Text(
                     dataRoom.datetime != null
                         ? dataRoom.datetime.split(' ')[1]

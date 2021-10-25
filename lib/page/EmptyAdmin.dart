@@ -36,6 +36,38 @@ class _EmptyAdminState extends State<EmptyAdmin> {
     return true;
   }
 
+  String chack_L(dynamic data) {
+    String text = "";
+    if (data > 0 && data <= 100) {
+      text = "แสงแสบตา";
+    } else if (data > 100 && data <= 300) {
+      text = "แสงจ้า";
+    } else if (data > 300 && data <= 400) {
+      text = "แสงมาก";
+    } else if (data > 400 && data <= 600) {
+      text = "แสงปานกลาง";
+    } else if (data > 600 && data <= 700) {
+      text = "มีแสงเล็กน้อย";
+    } else if (data > 700) {
+      text = "มืด";
+    }
+    return text;
+  }
+
+  String chack_(dynamic data) {
+    String text = "";
+    if (data == 0) {
+      text = "ไม่มีความเคลื่อนไหว";
+    } else if (data > 0 && data <= 0.2) {
+      text = "เคลื่อนไหวเล็กน้อย";
+    } else if (data > 0.2 && data <= 0.5) {
+      text = "เคลื่อนไหวปานกลาง";
+    } else if (data > 0.5 && data <= 1) {
+      text = "เคลื่อนไหวมาก";
+    }
+    return text;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -236,7 +268,9 @@ class _EmptyAdminState extends State<EmptyAdmin> {
                                           ),
                                           dataRoom[index].motion != null
                                               ? Text(
-                                                  '${dataRoom[index].motion.toStringAsFixed(2)}',
+                                                  chack_(
+                                                      dataRoom[index].motion),
+                                                  // '${dataRoom[index].motion.toStringAsFixed(2)}',
                                                   style: GoogleFonts.mali(
                                                       color: Colors.white,
                                                       fontSize: 16.0,
@@ -269,7 +303,9 @@ class _EmptyAdminState extends State<EmptyAdmin> {
                                           ),
                                           dataRoom[index].luminance != null
                                               ? Text(
-                                                  '${dataRoom[index].luminance.toStringAsFixed(2)}',
+                                                  chack_L(dataRoom[index]
+                                                      .luminance),
+                                                  // '${dataRoom[index].luminance.toStringAsFixed(2)}',
                                                   style: GoogleFonts.mali(
                                                       color: Colors.white,
                                                       fontSize: 16.0,
